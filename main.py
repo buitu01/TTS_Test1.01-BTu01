@@ -208,6 +208,7 @@ def main(page: ft.Page):
             filename = tts.generate_sync(text, **kwargs)
             audio_player.src = filename
             audio_player.update()
+            audio_player.play()
             status_text.value = "Đang phát..."
             play_btn.content.controls[0].name = ft.Icons.VOLUME_UP_ROUNDED
             play_btn.content.controls[1].value = "Đang phát..."
