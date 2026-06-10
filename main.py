@@ -1,5 +1,5 @@
 import flet as ft
-from flet_audio import Audio
+import flet_audio
 from tts_engine import TTSEngine
 import os
 
@@ -13,7 +13,7 @@ def main(page: ft.Page):
     assets_dir = os.path.join(os.path.dirname(__file__), "assets")
     tts = TTSEngine(assets_dir)
     
-    audio_player = Audio(src="", autoplay=True)
+    audio_player = flet_audio.Audio(src="", autoplay=True)
     page.overlay.append(audio_player)
     
     title = ft.Text("Text to Speech (AI Voices)", size=26, weight=ft.FontWeight.BOLD)
