@@ -12,3 +12,6 @@ dependencies = [
     "edge-tts",
     "requests"
 ]
+
+[tool.flet.flutter.dependencies]
+flet_audio = "any"
