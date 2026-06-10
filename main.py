@@ -11,14 +11,19 @@ def main(page: ft.Page):
     page.window_width = 400
     page.window_height = 800
     page.padding = 0
-    
-    assets_dir = os.path.join(os.path.dirname(__file__), "assets")
+    import tempfile
+    is_desktop_test = (os.name == 'nt' and page.web is False)
+    if is_desktop_test:
+        assets_dir = os.path.join(os.path.dirname(__file__), "assets")
+    else:
+        # Mobile apps cannot write to the bundled assets folder. Use native temp dir.
+        assets_dir = os.path.join(tempfile.gettempdir(), "antigravity_assets")
+        
     tts = TTSEngine(assets_dir)
     
     # State
     current_audio_file = [None]
     save_counter = [1]
-    is_desktop_test = (os.name == 'nt' and page.web is False)
     
     audio_player = [None]
 
