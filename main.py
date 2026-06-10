@@ -14,7 +14,6 @@ def main(page: ft.Page):
     tts = TTSEngine(assets_dir)
     
     audio_player = flet_audio.Audio(src="", autoplay=True)
-    page.overlay.append(audio_player)
     
     title = ft.Text("Text to Speech (AI Voices)", size=26, weight=ft.FontWeight.BOLD)
     
@@ -191,7 +190,8 @@ def main(page: ft.Page):
         textbox,
         tabs,
         ft.Row([status_text], alignment=ft.MainAxisAlignment.CENTER),
-        ft.Row([play_btn], alignment=ft.MainAxisAlignment.CENTER)
+        ft.Row([play_btn], alignment=ft.MainAxisAlignment.CENTER),
+        ft.Container(audio_player, width=0, height=0)
     )
 
 if __name__ == "__main__":

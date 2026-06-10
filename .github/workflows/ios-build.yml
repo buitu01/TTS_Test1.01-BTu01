@@ -19,10 +19,10 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Flet
-        run: pip install flet
-
-
+      - name: Install Dependencies
+        run: |
+          pip install flet
+          pip install -r requirements.txt
 
       - name: Build iOS IPA
         run: |
