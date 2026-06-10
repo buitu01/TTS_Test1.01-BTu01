@@ -17,9 +17,11 @@ def main(page: ft.Page):
     
     # State
     current_audio_file = [None]
+    is_desktop_test = (os.name == 'nt' and page.web is False)
     
-    audio_player = flet_audio.Audio(src="", autoplay=True)
-    if not (os.name == 'nt' and page.web is False):
+    audio_player = None
+    if not is_desktop_test:
+        audio_player = flet_audio.Audio(src="", autoplay=True)
         page.overlay.append(audio_player)
     
     file_picker = ft.FilePicker()
@@ -131,7 +133,8 @@ def main(page: ft.Page):
         if e.data == "completed":
             reset_buttons()
 
-    audio_player.on_state_changed = on_audio_state_changed
+    if audio_player:
+        audio_player.on_state_changed = on_audio_state_changed
 
     def stop_click(e):
         try:
