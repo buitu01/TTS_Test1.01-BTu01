@@ -28,8 +28,17 @@ jobs:
         run: |
           flet build ipa --yes
 
+      - name: Package into IPA
+        run: |
+          echo "Finding .app directory..."
+          APP_DIR=$(find . -name "*.app" -type d | head -n 1)
+          echo "Found: $APP_DIR"
+          mkdir -p Payload
+          cp -r "$APP_DIR" Payload/
+          zip -qr Antigravity.ipa Payload
+
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Antigravity-iOS
-          path: build/ipa/*.ipa
+          path: Antigravity.ipa
