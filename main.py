@@ -20,13 +20,7 @@ def main(page: ft.Page):
     save_counter = [1]
     is_desktop_test = (os.name == 'nt' and page.web is False)
     
-    audio_player = None
-    if not is_desktop_test:
-        audio_player = flet_audio.Audio(src="", autoplay=True)
-        page.overlay.append(audio_player)
-    
-    file_picker = ft.FilePicker()
-    page.overlay.append(file_picker)
+    audio_player = [None]
 
     ACCENT_COLOR = "#3B82F6"
     TEXT_COLOR = "#F8FAFC"
@@ -134,12 +128,12 @@ def main(page: ft.Page):
         if e.data == "completed":
             reset_buttons()
 
-    if audio_player:
-        audio_player.on_state_changed = on_audio_state_changed
+
 
     def stop_click(e):
         try:
-            page.run_task(audio_player.pause)
+            if audio_player[0]:
+                page.run_task(audio_player[0].pause)
         except:
             pass
         reset_buttons()
@@ -152,15 +146,21 @@ def main(page: ft.Page):
             
         async def _save():
             try:
+                picker = ft.FilePicker()
+                page.overlay.append(picker)
+                page.update()
+                
                 with open(current_audio_file[0], "rb") as f:
                     audio_bytes = f.read()
                 suggested_name = f"Antigravity_Audio_{save_counter[0]}.mp3"
-                save_path = await file_picker.save_file(file_name=suggested_name, src_bytes=audio_bytes)
+                save_path = await picker.save_file(file_name=suggested_name, src_bytes=audio_bytes)
                 if save_path:
                     with open(save_path, "wb") as f:
                         f.write(audio_bytes)
                 save_counter[0] += 1
-                status_text.value = "Đã bật hộp thoại lưu!"
+                status_text.value = "Đã lưu / Hộp thoại đã bật!"
+                
+                page.overlay.remove(picker)
                 page.update()
             except Exception as ex:
                 status_text.value = f"Lỗi khi lưu: {ex}"
@@ -209,9 +209,15 @@ def main(page: ft.Page):
                 threading.Thread(target=_wait).start()
             else:
                 # Normal Flet Audio for Mobile
-                audio_player.src = filename
-                audio_player.update()
-                page.run_task(audio_player.play)
+                if not audio_player[0]:
+                    audio_player[0] = flet_audio.Audio(src=filepath, autoplay=True)
+                    audio_player[0].on_state_changed = on_audio_state_changed
+                    page.overlay.append(audio_player[0])
+                    page.update()
+                else:
+                    audio_player[0].src = filepath
+                    audio_player[0].update()
+                page.run_task(audio_player[0].play)
                 status_text.value = "Đang phát..."
             
             play_btn.content.controls[0].name = ft.Icons.VOLUME_UP_ROUNDED
