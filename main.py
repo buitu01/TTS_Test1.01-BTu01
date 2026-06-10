@@ -17,6 +17,7 @@ def main(page: ft.Page):
     
     # State
     current_audio_file = [None]
+    save_counter = [1]
     is_desktop_test = (os.name == 'nt' and page.web is False)
     
     audio_player = None
@@ -153,11 +154,13 @@ def main(page: ft.Page):
             try:
                 with open(current_audio_file[0], "rb") as f:
                     audio_bytes = f.read()
-                save_path = await file_picker.save_file(file_name="Antigravity_Audio.mp3", src_bytes=audio_bytes)
+                suggested_name = f"Antigravity_Audio_{save_counter[0]}.mp3"
+                save_path = await file_picker.save_file(file_name=suggested_name, src_bytes=audio_bytes)
                 if save_path:
                     with open(save_path, "wb") as f:
                         f.write(audio_bytes)
-                status_text.value = "Đã lưu thành công!"
+                save_counter[0] += 1
+                status_text.value = "Đã bật hộp thoại lưu!"
                 page.update()
             except Exception as ex:
                 status_text.value = f"Lỗi khi lưu: {ex}"
