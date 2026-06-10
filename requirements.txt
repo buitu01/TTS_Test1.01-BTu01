@@ -1,4 +1,4 @@
 flet
-flet_audio
+flet-audio
 edge-tts
 requests
