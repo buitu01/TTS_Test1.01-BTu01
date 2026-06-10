@@ -15,6 +15,7 @@ def main(page: ft.Page):
     tts = TTSEngine(assets_dir)
     
     audio_player = flet_audio.Audio(src="", autoplay=True)
+    page.overlay.append(audio_player)
     
     # Custom colors
     ACCENT_COLOR = "#3B82F6" # Blue 500
@@ -260,8 +261,7 @@ def main(page: ft.Page):
     bottom_bar = ft.Container(
         content=ft.Column([
             ft.Row([status_text], alignment=ft.MainAxisAlignment.CENTER),
-            play_btn,
-            ft.Container(audio_player, width=0, height=0)
+            play_btn
         ], spacing=15),
         padding=ft.Padding(left=20, right=20, top=15, bottom=40),
         bgcolor=CARD_BG,
