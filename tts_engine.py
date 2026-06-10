@@ -41,7 +41,15 @@ class TTSEngine:
             final_rate = f"{base_rate + speed_mod:+}%"
             pitch = EXPRESSIONS.get(expression, EXPRESSIONS["Bình thường"])["pitch"]
             
-            asyncio.run(self._async_generate_edge(text, voice, final_rate, pitch, output_file))
+            import threading
+            def _run():
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                loop.run_until_complete(self._async_generate_edge(text, voice, final_rate, pitch, output_file))
+                loop.close()
+            t = threading.Thread(target=_run)
+            t.start()
+            t.join()
             
         elif engine == "fpt":
             url = 'https://api.fpt.ai/hmi/tts/v5'
