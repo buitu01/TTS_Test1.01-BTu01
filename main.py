@@ -151,7 +151,12 @@ def main(page: ft.Page):
                 with open(current_audio_file[0], "rb") as f:
                     audio_bytes = f.read()
                 suggested_name = f"Antigravity_Audio_{save_counter[0]}.mp3"
-                save_path = await picker.save_file(file_name=suggested_name, src_bytes=audio_bytes)
+                save_path = await picker.save_file(
+                    file_name=suggested_name, 
+                    allowed_extensions=["mp3"],
+                    file_type=ft.FilePickerFileType.AUDIO,
+                    src_bytes=audio_bytes
+                )
                 if save_path:
                     with open(save_path, "wb") as f:
                         f.write(audio_bytes)
