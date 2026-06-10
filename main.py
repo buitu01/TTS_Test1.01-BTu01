@@ -5,24 +5,38 @@ import os
 
 def main(page: ft.Page):
     page.title = "Text to Speech - Antigravity"
-    page.theme_mode = ft.ThemeMode.SYSTEM
-    page.window_width = 600
+    page.theme_mode = ft.ThemeMode.DARK
+    page.bgcolor = "#0F172A" # Premium Slate 900
+    page.window_width = 400
     page.window_height = 800
-    page.scroll = ft.ScrollMode.AUTO
-
+    page.padding = 0 # Remove default padding so bottom bar touches edges
+    
     assets_dir = os.path.join(os.path.dirname(__file__), "assets")
     tts = TTSEngine(assets_dir)
     
     audio_player = flet_audio.Audio(src="", autoplay=True)
     
-    title = ft.Text("Text to Speech (AI Voices)", size=26, weight=ft.FontWeight.BOLD)
+    # Custom colors
+    ACCENT_COLOR = "#3B82F6" # Blue 500
+    TEXT_COLOR = "#F8FAFC" # Slate 50
+    CARD_BG = "#1E293B" # Slate 800
+    
+    title = ft.Text("AI Voice Studio", size=28, weight=ft.FontWeight.W_800, color=TEXT_COLOR)
     
     textbox = ft.TextField(
         multiline=True, 
-        min_lines=6, 
-        max_lines=8, 
+        min_lines=5, 
+        max_lines=7, 
         value="Xin chào! Bạn có thể chọn giữa Edge-TTS, FPT.AI hoặc ElevenLabs ở bên dưới nhé.",
-        border_color=ft.Colors.BLUE_400
+        border_color="transparent",
+        bgcolor=CARD_BG,
+        color=TEXT_COLOR,
+        border_radius=15,
+        content_padding=20,
+        text_size=16,
+        cursor_color=ACCENT_COLOR,
+        focused_border_color=ACCENT_COLOR,
+        focused_border_width=2
     )
 
     # --- Tab Edge-TTS ---
@@ -32,13 +46,19 @@ def main(page: ft.Page):
             ft.dropdown.Option("vi-VN-HoaiMyNeural", "Hoài My (Nữ)"),
             ft.dropdown.Option("vi-VN-NamMinhNeural", "Nam Minh (Nam)")
         ],
-        value="vi-VN-HoaiMyNeural"
+        value="vi-VN-HoaiMyNeural",
+        border_radius=10,
+        filled=True,
+        bgcolor=page.bgcolor
     )
-    edge_speed_slider = ft.Slider(min=-50, max=50, divisions=100, label="Tốc độ: {value}%", value=0)
+    edge_speed_slider = ft.Slider(min=-50, max=50, divisions=100, label="Tốc độ: {value}%", value=0, active_color=ACCENT_COLOR)
     edge_expr_dropdown = ft.Dropdown(
         label="Biểu cảm",
         options=[ft.dropdown.Option(x) for x in ["Bình thường", "Vui vẻ", "Buồn bã", "Ngạc nhiên", "Tức giận"]],
-        value="Bình thường"
+        value="Bình thường",
+        border_radius=10,
+        filled=True,
+        bgcolor=page.bgcolor
     )
 
     # --- Tab FPT.AI ---
@@ -53,9 +73,12 @@ def main(page: ft.Page):
             ft.dropdown.Option("minhquang", "minhquang (Nam miền Nam)"),
             ft.dropdown.Option("linhsan", "linhsan (Nữ miền Nam)")
         ],
-        value="banmai"
+        value="banmai",
+        border_radius=10,
+        filled=True,
+        bgcolor=page.bgcolor
     )
-    fpt_speed_slider = ft.Slider(min=-3, max=3, divisions=6, label="Tốc độ: {value}", value=0)
+    fpt_speed_slider = ft.Slider(min=-3, max=3, divisions=6, label="Tốc độ: {value}", value=0, active_color=ACCENT_COLOR)
 
     # --- Tab ElevenLabs ---
     eleven_voices_map = {
@@ -68,16 +91,28 @@ def main(page: ft.Page):
     eleven_voice_dropdown = ft.Dropdown(
         label="Giọng đọc (Tiếng Việt)",
         options=[ft.dropdown.Option(k, v) for k, v in eleven_voices_map.items()],
-        value="Na15FlRRkMEDtEW4nVVP"
+        value="Na15FlRRkMEDtEW4nVVP",
+        border_radius=10,
+        filled=True,
+        bgcolor=page.bgcolor
     )
-    eleven_custom_input = ft.TextField(label="Hoặc nhập Voice ID", hint_text="Nếu bạn tự clone giọng")
+    eleven_custom_input = ft.TextField(
+        label="Hoặc nhập Voice ID", 
+        hint_text="Nếu bạn tự clone giọng",
+        border_radius=10,
+        filled=True,
+        bgcolor=page.bgcolor
+    )
 
     tab_bar = ft.TabBar(
         tabs=[
-            ft.Tab(label="Edge-TTS"),
-            ft.Tab(label="FPT.AI"),
-            ft.Tab(label="ElevenLabs")
-        ]
+            ft.Tab(text="Edge-TTS"),
+            ft.Tab(text="FPT.AI"),
+            ft.Tab(text="ElevenLabs")
+        ],
+        indicator_color=ACCENT_COLOR,
+        label_color=ACCENT_COLOR,
+        unselected_label_color=ft.Colors.GREY_500
     )
 
     tab_view = ft.TabBarView(
@@ -86,26 +121,26 @@ def main(page: ft.Page):
                 padding=20,
                 content=ft.Column([
                     edge_voice_dropdown,
-                    ft.Text("Điều chỉnh Tốc độ:"),
+                    ft.Text("Tốc độ", size=14, color=ft.Colors.GREY_400, weight=ft.FontWeight.W_600),
                     edge_speed_slider,
                     edge_expr_dropdown
-                ])
+                ], scroll=ft.ScrollMode.AUTO)
             ),
             ft.Container(
                 padding=20,
                 content=ft.Column([
                     fpt_voice_dropdown,
-                    ft.Text("Điều chỉnh Tốc độ:"),
+                    ft.Text("Tốc độ", size=14, color=ft.Colors.GREY_400, weight=ft.FontWeight.W_600),
                     fpt_speed_slider
-                ])
+                ], scroll=ft.ScrollMode.AUTO)
             ),
             ft.Container(
                 padding=20,
                 content=ft.Column([
                     eleven_voice_dropdown,
                     eleven_custom_input,
-                    ft.Text("Lưu ý: Công nghệ Đa ngôn ngữ tự động nhận diện và phát âm chuẩn tiếng Việt.", color=ft.Colors.GREY, size=12)
-                ])
+                    ft.Text("Công nghệ AI Đa ngôn ngữ tự động phát âm chuẩn xác Tiếng Việt.", color=ft.Colors.GREY_500, size=13, italic=True)
+                ], scroll=ft.ScrollMode.AUTO)
             )
         ],
         expand=True
@@ -118,11 +153,13 @@ def main(page: ft.Page):
         expand=True
     )
 
-    status_text = ft.Text("Sẵn sàng", color=ft.Colors.GREY)
+    status_text = ft.Text("Sẵn sàng", color=ft.Colors.GREY_400, size=14, weight=ft.FontWeight.W_500)
     
     def on_audio_state_changed(e):
         if e.data == "completed":
             play_btn.disabled = False
+            play_btn.content.controls[0].name = ft.Icons.PLAY_ARROW_ROUNDED
+            play_btn.content.controls[1].value = "Phát lại"
             status_text.value = "Đã phát xong."
             page.update()
 
@@ -136,6 +173,8 @@ def main(page: ft.Page):
             return
             
         play_btn.disabled = True
+        play_btn.content.controls[0].name = ft.Icons.HOURGLASS_EMPTY
+        play_btn.content.controls[1].value = "Đang xử lý..."
         status_text.value = "Đang tổng hợp giọng nói..."
         page.update()
 
@@ -170,29 +209,75 @@ def main(page: ft.Page):
             audio_player.src = filename
             audio_player.update()
             status_text.value = "Đang phát..."
+            play_btn.content.controls[0].name = ft.Icons.VOLUME_UP_ROUNDED
+            play_btn.content.controls[1].value = "Đang phát..."
         except Exception as ex:
             status_text.value = f"Lỗi: {ex}"
             play_btn.disabled = False
+            play_btn.content.controls[0].name = ft.Icons.PLAY_ARROW_ROUNDED
+            play_btn.content.controls[1].value = "Thử lại"
             
         page.update()
 
-    play_btn = ft.ElevatedButton(
-        "▶ Đọc văn bản", 
-        on_click=play_click, 
-        bgcolor=ft.Colors.GREEN_700, 
-        color=ft.Colors.WHITE,
-        height=50,
-        width=200
+    play_btn = ft.Container(
+        content=ft.Row([
+            ft.Icon(name=ft.Icons.PLAY_ARROW_ROUNDED, color=ft.Colors.WHITE, size=24),
+            ft.Text("Đọc văn bản", size=18, weight=ft.FontWeight.W_700, color=ft.Colors.WHITE)
+        ], alignment=ft.MainAxisAlignment.CENTER),
+        bgcolor=ACCENT_COLOR,
+        padding=15,
+        border_radius=30,
+        on_click=play_click,
+        ink=True, # Ripple effect
+        shadow=ft.BoxShadow(spread_radius=1, blur_radius=15, color=ft.colors.with_opacity(0.4, ACCENT_COLOR), offset=ft.Offset(0, 4))
     )
     
-    page.add(
-        ft.Row([title], alignment=ft.MainAxisAlignment.CENTER),
-        textbox,
-        tabs,
-        ft.Row([status_text], alignment=ft.MainAxisAlignment.CENTER),
-        ft.Row([play_btn], alignment=ft.MainAxisAlignment.CENTER),
-        ft.Container(audio_player, width=0, height=0)
+    # Main content wrapper
+    content = ft.Column(
+        controls=[
+            ft.Container(
+                content=title,
+                padding=ft.padding.only(top=15, bottom=15, left=20, right=20)
+            ),
+            ft.Container(
+                content=textbox,
+                padding=ft.padding.only(left=20, right=20, bottom=10)
+            ),
+            ft.Container(
+                content=tabs,
+                expand=True,
+                bgcolor=CARD_BG,
+                border_radius=ft.border_radius.only(top_left=30, top_right=30),
+                padding=ft.padding.only(top=10)
+            )
+        ],
+        expand=True,
+        spacing=0
     )
+
+    # Bottom action bar (fixed at bottom)
+    bottom_bar = ft.Container(
+        content=ft.Column([
+            ft.Row([status_text], alignment=ft.MainAxisAlignment.CENTER),
+            play_btn,
+            ft.Container(audio_player, width=0, height=0)
+        ], spacing=15),
+        padding=ft.padding.only(left=20, right=20, top=15, bottom=ft.padding.WindowPadding.bottom + 25),
+        bgcolor=CARD_BG,
+        shadow=ft.BoxShadow(spread_radius=0, blur_radius=20, color=ft.Colors.BLACK)
+    )
+
+    # The layout structure
+    layout = ft.Column(
+        controls=[
+            ft.Container(content=content, expand=True),
+            bottom_bar
+        ],
+        expand=True,
+        spacing=0
+    )
+
+    page.add(ft.SafeArea(layout, expand=True))
 
 if __name__ == "__main__":
     ft.app(target=main, assets_dir="assets")
