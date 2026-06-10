@@ -128,6 +128,11 @@ def main(page: ft.Page):
         if e.data == "completed":
             reset_buttons()
 
+    if not is_desktop_test:
+        audio_player[0] = flet_audio.Audio(autoplay=False)
+        audio_player[0].on_state_changed = on_audio_state_changed
+        page.overlay.append(audio_player[0])
+
 
 
     def stop_click(e):
@@ -210,14 +215,8 @@ def main(page: ft.Page):
                 threading.Thread(target=_wait).start()
             else:
                 # Normal Flet Audio for Mobile
-                if not audio_player[0]:
-                    audio_player[0] = flet_audio.Audio(src=filepath, autoplay=True)
-                    audio_player[0].on_state_changed = on_audio_state_changed
-                    page.overlay.append(audio_player[0])
-                    page.update()
-                else:
-                    audio_player[0].src = filepath
-                    audio_player[0].update()
+                audio_player[0].src = filepath
+                audio_player[0].update()
                 page.run_task(audio_player[0].play)
                 status_text.value = "Đang phát..."
             
