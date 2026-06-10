@@ -1,0 +1,14 @@
+[tool.flet]
+name = "Antigravity"
+version = "1.0.0"
+
+[project]
+name = "Antigravity"
+version = "1.0.0"
+description = "Text to Speech Studio"
+dependencies = [
+    "flet",
+    "flet-audio",
+    "edge-tts",
+    "requests"
+]

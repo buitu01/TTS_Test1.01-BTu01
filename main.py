@@ -1,5 +1,5 @@
 import flet as ft
-import flet_audio
+import flet_audio as fta
 from tts_engine import TTSEngine
 import os
 import shutil
@@ -129,7 +129,8 @@ def main(page: ft.Page):
             reset_buttons()
 
     if not is_desktop_test:
-        audio_player[0] = flet_audio.Audio(autoplay=False)
+        # Flet audio needs a valid src on initialization to not crash/unregister on iOS
+        audio_player[0] = fta.Audio(src="https://raw.githubusercontent.com/flet-dev/examples/main/python/controls/audio/assets/sample.mp3", autoplay=False)
         audio_player[0].on_state_changed = on_audio_state_changed
         page.overlay.append(audio_player[0])
 
