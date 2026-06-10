@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+build/
+.idea/
+.vscode/
+*.apk
+*.ipa
+*.aab

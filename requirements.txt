@@ -1,0 +1,4 @@
+flet
+flet_audio
+edge-tts
+requests
