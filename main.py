@@ -106,9 +106,9 @@ def main(page: ft.Page):
 
     tab_bar = ft.TabBar(
         tabs=[
-            ft.Tab(text="Edge-TTS"),
-            ft.Tab(text="FPT.AI"),
-            ft.Tab(text="ElevenLabs")
+            ft.Tab(label="Edge-TTS"),
+            ft.Tab(label="FPT.AI"),
+            ft.Tab(label="ElevenLabs")
         ],
         indicator_color=ACCENT_COLOR,
         label_color=ACCENT_COLOR,
@@ -221,7 +221,7 @@ def main(page: ft.Page):
 
     play_btn = ft.Container(
         content=ft.Row([
-            ft.Icon(name=ft.Icons.PLAY_ARROW_ROUNDED, color=ft.Colors.WHITE, size=24),
+            ft.Icon(ft.Icons.PLAY_ARROW_ROUNDED, color=ft.Colors.WHITE, size=24),
             ft.Text("Đọc văn bản", size=18, weight=ft.FontWeight.W_700, color=ft.Colors.WHITE)
         ], alignment=ft.MainAxisAlignment.CENTER),
         bgcolor=ACCENT_COLOR,
@@ -229,7 +229,7 @@ def main(page: ft.Page):
         border_radius=30,
         on_click=play_click,
         ink=True, # Ripple effect
-        shadow=ft.BoxShadow(spread_radius=1, blur_radius=15, color=ft.colors.with_opacity(0.4, ACCENT_COLOR), offset=ft.Offset(0, 4))
+        shadow=ft.BoxShadow(spread_radius=1, blur_radius=15, color="#663B82F6", offset=ft.Offset(0, 4))
     )
     
     # Main content wrapper
@@ -262,7 +262,7 @@ def main(page: ft.Page):
             play_btn,
             ft.Container(audio_player, width=0, height=0)
         ], spacing=15),
-        padding=ft.padding.only(left=20, right=20, top=15, bottom=ft.padding.WindowPadding.bottom + 25),
+        padding=ft.padding.only(left=20, right=20, top=15, bottom=40),
         bgcolor=CARD_BG,
         shadow=ft.BoxShadow(spread_radius=0, blur_radius=20, color=ft.Colors.BLACK)
     )
