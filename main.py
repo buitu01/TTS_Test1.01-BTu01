@@ -237,18 +237,18 @@ def main(page: ft.Page):
         controls=[
             ft.Container(
                 content=title,
-                padding=ft.padding.only(top=15, bottom=15, left=20, right=20)
+                padding=ft.Padding(top=15, bottom=15, left=20, right=20)
             ),
             ft.Container(
                 content=textbox,
-                padding=ft.padding.only(left=20, right=20, bottom=10)
+                padding=ft.Padding(left=20, right=20, bottom=10, top=0)
             ),
             ft.Container(
                 content=tabs,
                 expand=True,
                 bgcolor=CARD_BG,
-                border_radius=ft.border_radius.only(top_left=30, top_right=30),
-                padding=ft.padding.only(top=10)
+                border_radius=ft.BorderRadius(top_left=30, top_right=30, bottom_left=0, bottom_right=0),
+                padding=ft.Padding(top=10, bottom=0, left=0, right=0)
             )
         ],
         expand=True,
@@ -262,7 +262,7 @@ def main(page: ft.Page):
             play_btn,
             ft.Container(audio_player, width=0, height=0)
         ], spacing=15),
-        padding=ft.padding.only(left=20, right=20, top=15, bottom=40),
+        padding=ft.Padding(left=20, right=20, top=15, bottom=40),
         bgcolor=CARD_BG,
         shadow=ft.BoxShadow(spread_radius=0, blur_radius=20, color=ft.Colors.BLACK)
     )
