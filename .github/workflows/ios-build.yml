@@ -30,7 +30,7 @@ jobs:
 
       - name: Build iOS IPA
         run: |
-          flet build ipa --flutter-build-args --no-codesign
+          flet build ipa
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
