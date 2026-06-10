@@ -21,9 +21,6 @@ def main(page: ft.Page):
     is_desktop_test = (os.name == 'nt' and page.web is False)
     
     audio_player = [None]
-    
-    file_picker = ft.FilePicker()
-    page.overlay.append(file_picker)
 
     ACCENT_COLOR = "#3B82F6"
     TEXT_COLOR = "#F8FAFC"
@@ -149,10 +146,12 @@ def main(page: ft.Page):
             
         async def _save():
             try:
+                picker = ft.FilePicker()
+                
                 with open(current_audio_file[0], "rb") as f:
                     audio_bytes = f.read()
                 suggested_name = f"Antigravity_Audio_{save_counter[0]}.mp3"
-                save_path = await file_picker.save_file(file_name=suggested_name, src_bytes=audio_bytes)
+                save_path = await picker.save_file(file_name=suggested_name, src_bytes=audio_bytes)
                 if save_path:
                     with open(save_path, "wb") as f:
                         f.write(audio_bytes)
