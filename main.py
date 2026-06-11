@@ -215,16 +215,26 @@ def main(page: ft.Page):
                 threading.Thread(target=_wait).start()
             else:
                 # Normal Flet Audio for Mobile
-                if not audio_player[0]:
-                    audio_player[0] = flet_audio.Audio(src=filepath, autoplay=True)
-                    audio_player[0].on_state_changed = on_audio_state_changed
-                    page.overlay.append(audio_player[0])
-                    page.update()
-                else:
-                    audio_player[0].src = filepath
-                    audio_player[0].update()
+                # DO NOT append to page.overlay to prevent Unknown control red column
+                audio_player[0] = flet_audio.Audio(src=filepath, autoplay=True)
                 page.run_task(audio_player[0].play)
                 status_text.value = "Đang phát..."
+                
+                async def _wait_audio():
+                    import asyncio
+                    await asyncio.sleep(1)
+                    try:
+                        dur = await audio_player[0].get_duration()
+                        if dur:
+                            total_sec = dur.milliseconds / 1000.0 + dur.seconds + dur.minutes * 60 + dur.hours * 3600
+                            await asyncio.sleep(total_sec)
+                        else:
+                            await asyncio.sleep(5)
+                    except:
+                        pass
+                    reset_buttons()
+                    page.update()
+                page.run_task(_wait_audio)
             
             play_btn.content.controls[0].name = ft.Icons.VOLUME_UP_ROUNDED
             play_btn.content.controls[1].value = "Đang phát..."
