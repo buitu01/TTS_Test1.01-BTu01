@@ -26,7 +26,7 @@ jobs:
 
       - name: Build iOS IPA
         run: |
-          flet build ipa --yes
+          flet build ipa --include-packages flet_audio --yes
 
       - name: Package into IPA
         run: |
