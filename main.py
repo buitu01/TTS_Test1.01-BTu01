@@ -1,9 +1,9 @@
 import flet as ft
 import flet_audio
-import flet_audio as fta
 from tts_engine import TTSEngine
 import os
 import shutil
+import datetime
 
 def main(page: ft.Page):
     page.title = "Text to Speech - Antigravity"
@@ -12,21 +12,24 @@ def main(page: ft.Page):
     page.window_width = 400
     page.window_height = 800
     page.padding = 0
-    import tempfile
-    is_desktop_test = (os.name == 'nt' and page.web is False)
-    if is_desktop_test:
-        assets_dir = os.path.join(os.path.dirname(__file__), "assets")
-    else:
-        # Mobile apps cannot write to the bundled assets folder. Use native temp dir.
-        assets_dir = os.path.join(tempfile.gettempdir(), "antigravity_assets")
-        
+    
+    assets_dir = os.path.join(os.path.dirname(__file__), "assets")
     tts = TTSEngine(assets_dir)
     
     # State
     current_audio_file = [None]
     save_counter = [1]
+    is_desktop_test = (os.name == 'nt' and page.web is False)
     
     audio_player = [None]
+    
+    file_picker = ft.FilePicker()
+    page.overlay.append(file_picker)
+    
+    # Optionally catch Flet errors so they don't appear as red columns
+    def on_page_error(e):
+        print(f"Flet error: {e.data}")
+    page.on_error = on_page_error
 
     ACCENT_COLOR = "#3B82F6"
     TEXT_COLOR = "#F8FAFC"
@@ -134,12 +137,6 @@ def main(page: ft.Page):
         if e.data == "completed":
             reset_buttons()
 
-    if not is_desktop_test:
-        # Flet audio needs a valid src on initialization to not crash/unregister on iOS
-        audio_player[0] = fta.Audio(src="https://raw.githubusercontent.com/flet-dev/examples/main/python/controls/audio/assets/sample.mp3", autoplay=False)
-        audio_player[0].on_state_changed = on_audio_state_changed
-        page.overlay.append(audio_player[0])
-
 
 
     def stop_click(e):
@@ -158,22 +155,18 @@ def main(page: ft.Page):
             
         async def _save():
             try:
-                picker = ft.FilePicker()
-                
                 with open(current_audio_file[0], "rb") as f:
                     audio_bytes = f.read()
-                suggested_name = f"Antigravity_Audio_{save_counter[0]}.mp3"
-                save_path = await picker.save_file(
-                    file_name=suggested_name, 
-                    allowed_extensions=["mp3"],
-                    file_type=ft.FilePickerFileType.AUDIO,
-                    src_bytes=audio_bytes
-                )
+                    
+                date_str = datetime.datetime.now().strftime("%d-%m-%Y")
+                suggested_name = f"{save_counter[0]}-{date_str}.mp3"
+                
+                save_path = await file_picker.save_file(file_name=suggested_name, src_bytes=audio_bytes)
                 if save_path:
                     with open(save_path, "wb") as f:
                         f.write(audio_bytes)
                 save_counter[0] += 1
-                status_text.value = "Đã lưu / Hộp thoại đã bật!"
+                status_text.value = "Đã bật hộp thoại lưu / Đã lưu!"
                 page.update()
             except Exception as ex:
                 status_text.value = f"Lỗi khi lưu: {ex}"
@@ -222,8 +215,14 @@ def main(page: ft.Page):
                 threading.Thread(target=_wait).start()
             else:
                 # Normal Flet Audio for Mobile
-                audio_player[0].src = filepath
-                audio_player[0].update()
+                if not audio_player[0]:
+                    audio_player[0] = flet_audio.Audio(src=filepath, autoplay=True)
+                    audio_player[0].on_state_changed = on_audio_state_changed
+                    page.overlay.append(audio_player[0])
+                    page.update()
+                else:
+                    audio_player[0].src = filepath
+                    audio_player[0].update()
                 page.run_task(audio_player[0].play)
                 status_text.value = "Đang phát..."
             

@@ -26,7 +26,7 @@ jobs:
 
       - name: Build iOS IPA
         run: |
-          flet build ipa --yes --clear-cache
+          flet build ipa --yes
 
       - name: Package into IPA
         run: |
