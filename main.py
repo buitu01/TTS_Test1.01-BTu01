@@ -23,9 +23,6 @@ def main(page: ft.Page):
     
     audio_player = [None]
     
-    file_picker = ft.FilePicker()
-    page.overlay.append(file_picker)
-    
     # Optionally catch Flet errors so they don't appear as red columns
     def on_page_error(e):
         print(f"Flet error: {e.data}")
@@ -155,18 +152,30 @@ def main(page: ft.Page):
             
         async def _save():
             try:
+                # Dynamically load FilePicker to avoid early registration error
+                picker = ft.FilePicker()
+                page.overlay.append(picker)
+                page.update()
+                
+                # IMPORTANT: Must wait for client to register the control before invoking it
+                import asyncio
+                await asyncio.sleep(0.5)
+                
                 with open(current_audio_file[0], "rb") as f:
                     audio_bytes = f.read()
                     
                 date_str = datetime.datetime.now().strftime("%d-%m-%Y")
                 suggested_name = f"{save_counter[0]}-{date_str}.mp3"
                 
-                save_path = await file_picker.save_file(file_name=suggested_name, src_bytes=audio_bytes)
+                save_path = await picker.save_file(file_name=suggested_name, src_bytes=audio_bytes)
                 if save_path:
                     with open(save_path, "wb") as f:
                         f.write(audio_bytes)
                 save_counter[0] += 1
                 status_text.value = "Đã bật hộp thoại lưu / Đã lưu!"
+                
+                # Cleanup
+                page.overlay.remove(picker)
                 page.update()
             except Exception as ex:
                 status_text.value = f"Lỗi khi lưu: {ex}"
