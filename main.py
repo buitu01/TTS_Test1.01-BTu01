@@ -152,14 +152,8 @@ def main(page: ft.Page):
             
         async def _save():
             try:
-                # Dynamically load FilePicker to avoid early registration error
+                # Flet 0.85+: FilePicker is a service, DO NOT add to page.overlay
                 picker = ft.FilePicker()
-                page.overlay.append(picker)
-                page.update()
-                
-                # IMPORTANT: Must wait for client to register the control before invoking it
-                import asyncio
-                await asyncio.sleep(0.5)
                 
                 with open(current_audio_file[0], "rb") as f:
                     audio_bytes = f.read()
@@ -173,9 +167,6 @@ def main(page: ft.Page):
                         f.write(audio_bytes)
                 save_counter[0] += 1
                 status_text.value = "Đã bật hộp thoại lưu / Đã lưu!"
-                
-                # Cleanup
-                page.overlay.remove(picker)
                 page.update()
             except Exception as ex:
                 status_text.value = f"Lỗi khi lưu: {ex}"
