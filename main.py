@@ -45,6 +45,7 @@ def main(page: ft.Page):
         border_radius=15,
         content_padding=20,
         text_size=16,
+        expand=True,
         cursor_color=ACCENT_COLOR,
         focused_border_color=ACCENT_COLOR,
         focused_border_width=2
@@ -266,7 +267,7 @@ def main(page: ft.Page):
     content = ft.Column(
         controls=[
             ft.Container(content=title, padding=ft.Padding(top=15, bottom=15, left=20, right=20)),
-            ft.Container(content=textbox, padding=ft.Padding(left=0, right=0, bottom=10, top=0)),
+            ft.Container(content=ft.Row([textbox]), padding=ft.Padding(left=0, right=0, bottom=10, top=0)),
             ft.Container(content=tabs, expand=True, bgcolor=CARD_BG, border_radius=ft.BorderRadius(top_left=30, top_right=30, bottom_left=0, bottom_right=0), padding=ft.Padding(top=10, bottom=0, left=0, right=0))
         ], expand=True, spacing=0
     )
