@@ -36,9 +36,9 @@ def main(page: ft.Page):
     
     textbox = ft.TextField(
         multiline=True, 
-        min_lines=5, 
-        max_lines=7, 
-        value="Xin chào! Bạn có thể chọn giữa Edge-TTS, FPT.AI hoặc ElevenLabs ở bên dưới nhé.",
+        min_lines=8, 
+        max_lines=12, 
+        value="Xin chào! Đây là AI Voice Studio, tôi có thể giúp bạn chuyển Text thành giọng nói, vui lòng nhập nội dung cần chuyển ở đây",
         border_color="transparent",
         bgcolor=CARD_BG,
         color=TEXT_COLOR,
@@ -105,7 +105,8 @@ def main(page: ft.Page):
         tabs=[
             ft.Tab(label="Edge-TTS"),
             ft.Tab(label="FPT.AI"),
-            ft.Tab(label="ElevenLabs")
+            ft.Tab(label="ElevenLabs"),
+            ft.Tab(label="About-me")
         ],
         indicator_color=ACCENT_COLOR, label_color=ACCENT_COLOR, unselected_label_color=ft.Colors.GREY_500
     )
@@ -114,12 +115,15 @@ def main(page: ft.Page):
         controls=[
             ft.Container(padding=20, content=ft.Column([edge_voice_dropdown, ft.Text("Tốc độ", size=14, color=ft.Colors.GREY_400), edge_speed_slider, edge_expr_dropdown], scroll=ft.ScrollMode.AUTO)),
             ft.Container(padding=20, content=ft.Column([fpt_voice_dropdown, ft.Text("Tốc độ", size=14, color=ft.Colors.GREY_400), fpt_speed_slider], scroll=ft.ScrollMode.AUTO)),
-            ft.Container(padding=20, content=ft.Column([eleven_voice_dropdown, eleven_custom_input], scroll=ft.ScrollMode.AUTO))
+            ft.Container(padding=20, content=ft.Column([eleven_voice_dropdown, eleven_custom_input], scroll=ft.ScrollMode.AUTO)),
+            ft.Container(padding=20, content=ft.Column([
+                ft.Text("App được tạo bởi Bùi Tú với phần trợ giúp của AI, nếu bạn có góp ý gì xin gửi mail đến Buitu0@gmail.com", size=16, color=ft.Colors.WHITE)
+            ], scroll=ft.ScrollMode.AUTO))
         ],
         expand=True
     )
 
-    tabs = ft.Tabs(length=3, selected_index=0, content=ft.Column([tab_bar, tab_view], expand=True), expand=True)
+    tabs = ft.Tabs(length=4, selected_index=0, content=ft.Column([tab_bar, tab_view], expand=True), expand=True)
 
     status_text = ft.Text("Sẵn sàng", color=ft.Colors.GREY_400, size=14, weight=ft.FontWeight.W_500)
     
@@ -262,7 +266,7 @@ def main(page: ft.Page):
     content = ft.Column(
         controls=[
             ft.Container(content=title, padding=ft.Padding(top=15, bottom=15, left=20, right=20)),
-            ft.Container(content=textbox, padding=ft.Padding(left=20, right=20, bottom=10, top=0)),
+            ft.Container(content=textbox, padding=ft.Padding(left=0, right=0, bottom=10, top=0)),
             ft.Container(content=tabs, expand=True, bgcolor=CARD_BG, border_radius=ft.BorderRadius(top_left=30, top_right=30, bottom_left=0, bottom_right=0), padding=ft.Padding(top=10, bottom=0, left=0, right=0))
         ], expand=True, spacing=0
     )
